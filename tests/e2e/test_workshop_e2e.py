@@ -33,6 +33,13 @@ def test_user_edits_car_and_change_survives_reload(page, live_server):
     page.get_by_label("Year", exact=True).fill("2023")
     page.get_by_role("button", name="Save changes").click()
 
+    expect(page).to_have_url(re.compile(r"/cars/\d+$"), timeout=15000)
+
+    print("URL after save:", page.url)
+    print("H1 texts:", page.locator("h1").all_text_contents())
+    print("H2 texts:", page.locator("h2").all_text_contents())
+    print("H3 texts:", page.locator("h3").all_text_contents())
+
     expect(page.get_by_role("heading", name="Honda Accord")).to_be_visible(timeout=15000)
 
     page.reload()
