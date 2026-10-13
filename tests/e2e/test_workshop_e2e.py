@@ -29,18 +29,15 @@ def test_user_edits_car_and_change_survives_reload(page, live_server):
 
     page.get_by_role("link", name="Edit car").click()
 
+    # 关键：等 app.js 的异步 fetch 把原值写进表单后再改
+    expect(page.locator("#model")).to_have_value("Civic", timeout=10000)
+    expect(page.locator("#year")).to_have_value("2022", timeout=10000)
+
     model_input = page.get_by_label("Model", exact=True)
-    model_input.click()
     model_input.fill("Accord")
-    model_input.press("Tab")
-    print("Model after fill:", model_input.input_value())
 
     year_input = page.get_by_label("Year", exact=True)
-    year_input.click()
     year_input.fill("2023")
-    year_input.press("Tab")
-    print("Year after fill:", year_input.input_value())
-    print("Model after year fill:", model_input.input_value())
 
     page.get_by_role("button", name="Save changes").click()
 
